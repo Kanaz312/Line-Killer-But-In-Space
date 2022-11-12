@@ -121,7 +121,14 @@ public class Player : MonoBehaviour
 
     void RegisterCut()
     {
-        if (Input.GetMouseButtonDown(0) && _aimer.CanCut(_lineIndex, _lineHandler))
+        Vector3 nextFramePosition = transform.position,
+            dir = _aimer.GetCutDir();
+
+        nextFramePosition = nextFramePosition + dir * _cutSpeed * Time.deltaTime;
+
+        if (Input.GetMouseButtonDown(0) 
+            && _aimer.CanCut(_lineIndex, _lineHandler)
+            && _lineHandler.IsPointInsidePolygon(nextFramePosition))
         {
             _cutStartPoint = transform.position;
             _state = PlayerState.Cutting;

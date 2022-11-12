@@ -272,7 +272,7 @@ public class LineHandler : MonoBehaviour
         return centroid / _points.Count;
     }
 
-    public Vector2 GetInwardNormalOfLine(int lineIndex)
+    private Vector2 GetNonNormalizedInwardNormal(int lineIndex)
     {
         int nextIndex = IncrementPointIndex(lineIndex);
 
@@ -282,12 +282,32 @@ public class LineHandler : MonoBehaviour
         // Get the counterclockwise direction to get inward normal
         Vector2 BToA = pointA - pointB;
 
-        BToA.Normalize();
         float oldY = BToA.y;
         BToA.y = BToA.x;
         BToA.x = -oldY;
 
         return BToA;
+    }
 
+    public Vector2 GetInwardNormalOfLine(int lineIndex)
+    {
+        return GetNonNormalizedInwardNormal(lineIndex).normalized;
+
+    }
+
+    public bool IsPointInsidePolygon(Vector2 point)
+    {
+        for (int i = 0; i < _points.Count; i++)
+        {
+            // Non-nomralized perpendicular vector to line
+            Vector2 perp = GetNonNormalizedInwardNormal(i),
+                AToPoint = point - (Vector2)_points[i];
+            float dotProd = Vector2.Dot(perp, AToPoint);
+            if (dotProd <= 0.0f)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
