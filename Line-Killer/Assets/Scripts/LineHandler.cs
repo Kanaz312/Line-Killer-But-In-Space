@@ -217,4 +217,33 @@ public class LineHandler : MonoBehaviour
         }
         return -1;
     }
+    
+    public Rect GetPointBounds() {
+        List<Vector3> pts = _points;
+        float xMin = pts[0].x;
+        float xMax = pts[0].x;
+        float yMin = pts[0].y;
+        float yMax = pts[0].y;
+        // xMax = yMax = float.MinValue;
+        // xMin = yMin = float.MaxValue;
+        foreach (Vector3 p in pts) {
+            if (p.x < xMin) {
+                xMin = p.x;
+            }
+            if (p.x > xMax) {
+                xMax = p.x;
+            }
+            if (p.y < yMin) {
+                yMin = p.y;
+            }
+            if (p.y > yMax) {
+                yMax = p.y;
+            }
+        }
+
+        Rect r = new Rect(xMin, yMin, (xMax - xMin), (yMax - yMin));
+        //r.xMax = xMax;
+        //r.yMax = yMax;
+        return r;
+    }
 }
