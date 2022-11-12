@@ -7,6 +7,8 @@ public class LineHandler : MonoBehaviour
     [SerializeField] private float _width = 1.0f;
     [SerializeField] private Color _color = Color.green;
     [SerializeField] private List<Vector3> _points = null;
+
+    [SerializeField] private GameObject _debugPoint = null;
     private LineRenderer _lineRenderer = null;
     
     // Start is called before the first frame update
@@ -24,6 +26,8 @@ public class LineHandler : MonoBehaviour
         _lineRenderer.endWidth = _width;
         _lineRenderer.positionCount = _points.Count;
         _lineRenderer.SetPositions(_points.ToArray());
+
+        _debugPoint.transform.position = GetCentroid();
     }
 
     public bool IsCircleCollidingLine(Vector2 center, float radius,
@@ -245,5 +249,21 @@ public class LineHandler : MonoBehaviour
         //r.xMax = xMax;
         //r.yMax = yMax;
         return r;
+    }
+
+    Vector2 GetCentroid()
+    {
+        if (_points.Count == 0)
+        {
+            return new Vector2(0.0f, 0.0f);
+        }
+        Vector2 centroid = new Vector2(0.0f, 0.0f);
+        for (int i = 0; i < _points.Count; i++)
+        {
+            Vector2 point = _points[i];
+            centroid.x += point.x;
+            centroid.y += point.y;
+        }
+        return centroid / _points.Count;
     }
 }
