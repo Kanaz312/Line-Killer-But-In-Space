@@ -76,7 +76,26 @@ public class Player : MonoBehaviour
 
     void MoveAlongLines()
     {
-        _interpVal += _speed;
+        float movementRemaining = _speed * Time.deltaTime,
+            distance;
+        Vector3 currentPosition = _lineHandler.GetPosition(_lineIndex, _interpVal),
+            nextPosition = _lineHandler.GetPosition(_lineIndex, 1.0f);
+        distance = (nextPosition - currentPosition).magnitude;
+        while (distance < movementRemaining)
+        {
+            movementRemaining -= distance;
+            currentPosition = nextPosition;
+            _lineIndex = _lineHandler.IncrementPointIndex(_lineIndex);
+            nextPosition = _lineHandler.GetPosition(_lineIndex, 1.0f);
+            distance = (nextPosition - currentPosition).magnitude;
+        }
+
+        currentPosition += (nextPosition - currentPosition).normalized * movementRemaining;
+        transform.position = currentPosition;
+
+        _interpVal = _lineHandler.GetInterpValueOnLine(currentPosition, _lineIndex);
+
+        /*_interpVal += _speed;
 
         if (_interpVal > 1.0f)
         {
@@ -91,7 +110,7 @@ public class Player : MonoBehaviour
 
         Vector3 pos = _lineHandler.GetPosition(_lineIndex, _interpVal);
         pos.z = 0.0f;
-        transform.position = pos;
+        transform.position = pos;*/
     }
 
     void MoveForCut()
