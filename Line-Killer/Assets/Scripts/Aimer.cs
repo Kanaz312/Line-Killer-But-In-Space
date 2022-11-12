@@ -47,4 +47,11 @@ public class Aimer : MonoBehaviour
     {
         return _cutDir;
     }
+
+    public bool CanCut(int lineIndex, LineHandler lineHandler)
+    {
+        Vector2 normal = lineHandler.GetInwardNormalOfLine(lineIndex);
+        float dotProd = Vector2.Dot(normal, _cutDir);
+        return dotProd > 0.0f;
+    }
 }

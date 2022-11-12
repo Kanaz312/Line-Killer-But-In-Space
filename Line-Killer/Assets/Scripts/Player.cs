@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
 
     void RegisterCut()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && _aimer.CanCut(_lineIndex, _lineHandler))
         {
             _cutStartPoint = transform.position;
             _state = PlayerState.Cutting;

@@ -9,12 +9,15 @@ public class LineHandler : MonoBehaviour
     [SerializeField] private List<Vector3> _points = null;
 
     [SerializeField] private GameObject _debugPoint = null;
+
     private LineRenderer _lineRenderer = null;
-    
+    private Camera _cam = null;
+
     // Start is called before the first frame update
     void Start()
     {
         _lineRenderer = GetComponent<LineRenderer>();
+        _cam = Camera.main;
     }
 
     private void Update()
@@ -27,7 +30,9 @@ public class LineHandler : MonoBehaviour
         _lineRenderer.positionCount = _points.Count;
         _lineRenderer.SetPositions(_points.ToArray());
 
-        _debugPoint.transform.position = GetCentroid();
+        Vector3 center = _cam.transform.position;
+        center.z = 0.0f;
+        _debugPoint.transform.position = center;
     }
 
     public bool IsCircleCollidingLine(Vector2 center, float radius,
@@ -265,5 +270,24 @@ public class LineHandler : MonoBehaviour
             centroid.y += point.y;
         }
         return centroid / _points.Count;
+    }
+
+    public Vector2 GetInwardNormalOfLine(int lineIndex)
+    {
+        int nextIndex = IncrementPointIndex(lineIndex);
+
+        Vector3 pointA = _points[lineIndex],
+            pointB = _points[nextIndex];
+
+        // Get the counterclockwise direction to get inward normal
+        Vector2 BToA = pointA - pointB;
+
+        BToA.Normalize();
+        float oldY = BToA.y;
+        BToA.y = BToA.x;
+        BToA.x = -oldY;
+
+        return BToA;
+
     }
 }
