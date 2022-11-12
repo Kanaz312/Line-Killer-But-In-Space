@@ -68,14 +68,7 @@ public class Player : MonoBehaviour
 
     void MoveAlongLines()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            _interpVal += _speed;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            _interpVal -= _speed;
-        }
+        _interpVal += _speed;
 
         if (_interpVal > 1.0f)
         {
