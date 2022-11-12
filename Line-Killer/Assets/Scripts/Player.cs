@@ -13,16 +13,19 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float _radius = 1.0f;
     [SerializeField] private float _speed = 0.1f;
+    [SerializeField] private float _cutSpeed = 3.0f;
 
     private Camera _cam = null;
     private LineHandler _lineHandler = null;
+    private Aimer _aimer = null;
+    private Cutter _cutter = null;
     private SpriteRenderer _renderer = null;
     private float _interpVal = 0.0f;
     private int _lineIndex = 0;
 
     private PlayerState _state = PlayerState.LineRiding;
     private Vector2 _cutStartPoint = new Vector2(0.0f, 0.0f);
-    private Vector2 _cutDir = new Vector2(1.0f, 0.0f);
+    private int _cutStartLine = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +33,8 @@ public class Player : MonoBehaviour
         _cam = Camera.main;
         _lineHandler = FindObjectOfType<LineHandler>();
         _renderer = GetComponent<SpriteRenderer>();
+        _aimer = GetComponent<Aimer>();
+        _cutter = GetComponent<Cutter>();
         StartCoroutine(ResetPosition());
     }
 
@@ -40,8 +45,11 @@ public class Player : MonoBehaviour
         {
             case PlayerState.LineRiding:
                 MoveAlongLines();
+                _aimer.AimAndRender();
+                RegisterCut();
                 break;
             case PlayerState.Cutting:
+                MoveForCut();
                 break;
             default:
                 Debug.LogError("Unknown player state");
@@ -81,12 +89,44 @@ public class Player : MonoBehaviour
             _interpVal = 1.0f;
         }
 
-        transform.position = _lineHandler.GetPosition(_lineIndex, _interpVal);
+        Vector3 pos = _lineHandler.GetPosition(_lineIndex, _interpVal);
+        pos.z = 0.0f;
+        transform.position = pos;
     }
 
     void MoveForCut()
     {
+        Vector3 pos = transform.position,
+            dir = _aimer.GetCutDir();
 
+        pos = pos + dir * _cutSpeed * Time.deltaTime;
+        transform.position = pos;
+
+        // Check to stop cut
+        int pointIndex = _lineHandler.GetIndexCollidingWithCircle(pos, _radius);
+        if (pointIndex > -1 && pointIndex != _cutStartLine)
+        {
+            _state = PlayerState.LineRiding;
+
+            // Cut Section
+            Vector2 cutEndPoint = _lineHandler.GetClosestPointOnLine(pos, pointIndex);
+            _cutter.CutSection(_cutStartLine, _cutStartPoint,
+                pointIndex, cutEndPoint);
+            
+            // Set position to new endpoint
+            _lineIndex = _lineHandler.GetIndexOfPoint(cutEndPoint);
+            _interpVal = _lineHandler.GetInterpValueOnLine(cutEndPoint, _lineIndex);
+        }
+    }
+
+    void RegisterCut()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            _cutStartPoint = transform.position;
+            _state = PlayerState.Cutting;
+            _cutStartLine = _lineHandler.GetIndexCollidingWithCircle(transform.position, _radius);
+        }
     }
 
     IEnumerator ResetPosition()

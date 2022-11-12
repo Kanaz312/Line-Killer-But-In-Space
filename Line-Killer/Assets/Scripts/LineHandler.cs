@@ -96,6 +96,27 @@ public class LineHandler : MonoBehaviour
         return -1;
     }
 
+    public float GetInterpValueOnLine(Vector2 point, int lineIndex)
+    {
+        int nextIndex = (lineIndex + 1) % _points.Count;
+        // Get points of line
+        Vector2 pointA = _points[lineIndex],
+            pointB = _points[nextIndex];
+
+        Vector2 PointToA = pointA - point,
+            pointAToB = pointB - pointA;
+
+        float interpVal = Vector2.Dot(PointToA, pointAToB.normalized);
+        return Mathf.Abs(interpVal) / pointAToB.magnitude;
+        
+    }
+
+    public Vector2 GetClosestPointOnLine(Vector2 point, int lineIndex)
+    {
+        float t = GetInterpValueOnLine(point, lineIndex);
+        return GetPosition(lineIndex, t);
+    }
+
     public Vector2 GetInitialPosition()
     {
         return (Vector2)_points[0];
@@ -133,6 +154,70 @@ public class LineHandler : MonoBehaviour
         return ret;
     }
 
+    public float GetAreaBetweenIndeces(int startIndex, int endIndex)
+    {
+        // Initialize area
+        int i = startIndex,
+            j = (i + 1) % _points.Count;
+        
+        Vector3 pointA = _points[endIndex],
+            pointB = _points[startIndex];
+
+        // Calculate the shoelace formula for the start and end index line
+        float area = (pointA.x + pointB.x) * (pointA.y - pointB.y);
+
+        // Calculate value of shoelace formula for rest of points
+        while (i != endIndex)
+        {
+            pointA = _points[i];
+            pointB = _points[j];
+            area += (pointA.x + pointB.x) * (pointA.y - pointB.y);
+
+            // increment i and j
+            i = j;
+            j = (i + 1) % _points.Count;
+        }
+
+        // Return absolute value
+        return Mathf.Abs(area / 2.0f);
+    }
+
+    public void InsertPoint(int index, Vector3 point)
+    {
+        _points.Insert(index, point);
+    }
+
+    public int GetNumPoints()
+    {
+        return _points.Count;
+    }
+
+    public void RemoveIndices(int startIndex, int endIndex)
+    {
+        if (endIndex < startIndex)
+        {
+            RemoveIndices(startIndex, _points.Count);
+            RemoveIndices(0, endIndex);
+        }
+        for (int i = 0; i < endIndex - startIndex; i++)
+        {
+            _points.RemoveAt(startIndex);
+        }
+    }
+
+    public int GetIndexOfPoint(Vector3 point)
+    {
+        for (int i = 0; i < _points.Count; i++)
+        {
+            // Small Value Floating Point issue:
+            //   compares approximate equality with 1e-5 delta
+            //   Small values of points could make false positive
+            if (_points[i] == point)
+                return i;
+        }
+        return -1;
+    }
+    
     public Rect GetPointBounds() {
         List<Vector3> pts = _points;
         float xMin = pts[0].x;
