@@ -42,16 +42,25 @@ public class CameraHandler : MonoBehaviour {
         }
 
         // Smooth the camera scaling
-        _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize, camSize, zoomSpd);
+        //_cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize, camSize, zoomSpd);
+        _cam.orthographicSize = camSize;
 
         // Center the polygon
         Vector3 camPos = new Vector3(polyRect.xMin + (polyRect.width / 2), polyRect.yMax - (polyRect.height / 2), zVal);
         // Smooth the camera transform
-        transform.position = Vector3.Lerp(transform.position, camPos, zoomSpd);
+        //transform.position = Vector3.Lerp(transform.position, camPos, zoomSpd);
+        transform.position = camPos;
     }
 
     public float GetWorldRescaleFactor()
     {
         return targetScale / _cam.orthographicSize;
+    }
+
+    public Vector2 GetScreenDimensions()
+    {
+        float height = 2f * _cam.orthographicSize;
+        float width = height * _cam.aspect;
+        return new Vector2(width, height);
     }
 }
