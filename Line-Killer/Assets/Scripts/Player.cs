@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
 
     private Camera _cam = null;
     private LineHandler _lineHandler = null;
+    private EnemyHandler _enemyHandler = null;
     private Aimer _aimer = null;
     private Cutter _cutter = null;
     private SpriteRenderer _renderer = null;
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour
         _cam = Camera.main;
         _lineHandler = FindObjectOfType<LineHandler>();
         _renderer = GetComponent<SpriteRenderer>();
+        _enemyHandler = FindObjectOfType<EnemyHandler>();
         _aimer = GetComponent<Aimer>();
         _cutter = GetComponent<Cutter>();
         StartCoroutine(ResetPosition());
@@ -135,6 +137,10 @@ public class Player : MonoBehaviour
             // Set position to new endpoint
             _lineIndex = _lineHandler.GetIndexOfPoint(cutEndPoint);
             _interpVal = _lineHandler.GetInterpValueOnLine(cutEndPoint, _lineIndex);
+
+            // Check if enemies outside 
+            _enemyHandler.KillOutOfBounds();
+
         }
     }
 

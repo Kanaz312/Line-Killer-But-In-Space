@@ -6,7 +6,7 @@ public class Level : MonoBehaviour {
     private int _level = 0;
     private int _exp = 0;
     public int _upgradePoints = 0;
-    private int _expNextLevel;
+    private int _expNextLevel;                         
 
     // Start is called before the first frame update
     void Start() {
