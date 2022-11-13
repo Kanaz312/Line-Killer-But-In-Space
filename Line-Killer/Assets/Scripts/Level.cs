@@ -27,6 +27,7 @@ public class Level : MonoBehaviour {
 
     // Gain 1 level, 1 upgrade point, update the exp required for the next level
     public void GainLevel() {
+        Debug.Log("LEVEL UP!");
         _level++;
         _upgradePoints++;
         _expNextLevel = NextLevelExp(_level+1);

@@ -18,8 +18,15 @@ public class Health : MonoBehaviour
     }
     public void Damage(int amt) {
         _health -= amt;
+        if (_health == 0) {
+            Kill();
+        }
     }
     public void Heal(int amt) {
         _health += amt;
+    }
+
+    public void Kill() {
+        Destroy(this.gameObject);
     }
 }

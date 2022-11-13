@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     private Camera _cam = null;
     private LineHandler _lineHandler = null;
     private EnemyHandler _enemyHandler = null;
+    private Shake _camShake = null;
     private Aimer _aimer = null;
     private Cutter _cutter = null;
     private SpriteRenderer _renderer = null;
@@ -37,6 +38,7 @@ public class Player : MonoBehaviour
         _enemyHandler = FindObjectOfType<EnemyHandler>();
         _aimer = GetComponent<Aimer>();
         _cutter = GetComponent<Cutter>();
+        _camShake = FindObjectOfType<Shake>();
         StartCoroutine(ResetPosition());
     }
 
@@ -169,5 +171,14 @@ public class Player : MonoBehaviour
         _interpVal = 0.0f;
         _lineIndex = 0;
         _state = PlayerState.LineRiding;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        //if (collision.gameObject.GetType() == typeof(Chiller)) {
+        _camShake.start = true;
+        GetComponent<Health>().Damage(1);
+        Debug.Log(GetComponent<Health>().Get());
+        //}
+
     }
 }
