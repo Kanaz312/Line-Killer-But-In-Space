@@ -256,7 +256,7 @@ public class LineHandler : MonoBehaviour
         return r;
     }
 
-    Vector2 GetCentroid()
+    public Vector2 GetCentroid()
     {
         if (_points.Count == 0)
         {

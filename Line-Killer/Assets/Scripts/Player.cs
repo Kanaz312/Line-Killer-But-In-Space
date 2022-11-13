@@ -40,6 +40,12 @@ public class Player : MonoBehaviour
         _cutter = GetComponent<Cutter>();
         _camShake = FindObjectOfType<Shake>();
         StartCoroutine(ResetPosition());
+        WorldScaler.OnScaleWorld += OnScaleWorld;
+    }
+
+    private void OnDestroy()
+    {
+        WorldScaler.OnScaleWorld -= OnScaleWorld;
     }
 
     // Update is called once per frame
@@ -179,6 +185,9 @@ public class Player : MonoBehaviour
         GetComponent<Health>().Damage(1);
         Debug.Log(GetComponent<Health>().Get());
         //}
-
+    }
+    public void OnScaleWorld(Vector2 point, float scale)
+    {
+        Debug.Log($"Player OnScaleWorld\nPoint Received: {point}\nFloat Received {scale}");
     }
 }
