@@ -8,8 +8,6 @@ public class LineHandler : MonoBehaviour
     [SerializeField] private Color _color = Color.green;
     [SerializeField] private List<Vector3> _points = null;
 
-    [SerializeField] private GameObject _debugPoint = null;
-
     private LineRenderer _lineRenderer = null;
     private Camera _cam = null;
     private MeshMaker _meshMaker;
@@ -20,9 +18,9 @@ public class LineHandler : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _cam = Camera.main;
         
-        _meshMaker = FindObjectOfType<MeshMaker>();
+        //_meshMaker = FindObjectOfType<MeshMaker>();
 
-        _meshMaker.MakePolygonMesh();
+        //_meshMaker.MakePolygonMesh();
         
         WorldScaler.OnScaleWorld += OnScaleWorld;
     }
@@ -41,10 +39,6 @@ public class LineHandler : MonoBehaviour
         _lineRenderer.endWidth = _width;
         _lineRenderer.positionCount = _points.Count;
         _lineRenderer.SetPositions(_points.ToArray());
-
-        Vector3 center = _cam.transform.position;
-        center.z = 0.0f;
-        _debugPoint.transform.position = center;
     }
 
     public bool IsCircleCollidingLine(Vector2 center, float radius,

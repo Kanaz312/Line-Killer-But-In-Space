@@ -15,7 +15,7 @@ public class Cutter : MonoBehaviour
             Debug.LogError("Cutter did not find a LineHandler object");
         }
 
-        _meshMaker = FindObjectOfType<MeshMaker>();
+        //_meshMaker = FindObjectOfType<MeshMaker>();
     }
 
     public void CutSection(int startIndex, Vector3 startPoint, int endIndex, Vector3 endPoint)
@@ -57,6 +57,6 @@ public class Cutter : MonoBehaviour
                 , newIndexA);
         }
 
-        _meshMaker.MakePolygonMesh();
+        //_meshMaker.MakePolygonMesh();
     }
 }

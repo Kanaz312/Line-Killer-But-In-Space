@@ -7,7 +7,11 @@ public class Enemy : MonoBehaviour
     protected int expAmt;
     // Start is called before the first frame update
     void Start() {
-        
+        WorldScaler.OnScaleWorld += OnScaleWorld;
+    }
+
+    private void OnDestroy() {
+        WorldScaler.OnScaleWorld -= OnScaleWorld;
     }
 
     // Update is called once per frame
@@ -22,5 +26,8 @@ public class Enemy : MonoBehaviour
     public void Kill() {
         //Debug.Log("KILL ENEMY");
         Destroy(this.gameObject);
+    }
+    public void OnScaleWorld(Vector2 pt, float scale) {
+        transform.position = transform.position * scale;
     }
 }

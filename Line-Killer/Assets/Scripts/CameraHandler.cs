@@ -8,7 +8,7 @@ public class CameraHandler : MonoBehaviour {
 
     [SerializeField] float zVal = -10f; // The z position of the camera
     [SerializeField] private float padding = 1f;    // The padding around the polygon
-    [SerializeField] private float zoomSpd = 0.1f;  // How fast it lerps
+    [SerializeField] private float zoomSpd = 20f;  // How fast it lerps
     private float targetScale;
 
     // Start is called before the first frame update
