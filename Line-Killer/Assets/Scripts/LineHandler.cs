@@ -12,12 +12,18 @@ public class LineHandler : MonoBehaviour
 
     private LineRenderer _lineRenderer = null;
     private Camera _cam = null;
+    private MeshMaker _meshMaker;
 
     // Start is called before the first frame update
     void Start()
     {
         _lineRenderer = GetComponent<LineRenderer>();
         _cam = Camera.main;
+        
+        _meshMaker = FindObjectOfType<MeshMaker>();
+
+        _meshMaker.MakePolygonMesh();
+        
         WorldScaler.OnScaleWorld += OnScaleWorld;
     }
 
@@ -323,5 +329,9 @@ public class LineHandler : MonoBehaviour
         {
             _points[i] = _points[i] * scale;
         }
+    }
+    public List<Vector3> GetCopyOfPoints()
+    {
+        return new List<Vector3>(_points);
     }
 }

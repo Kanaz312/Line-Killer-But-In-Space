@@ -6,7 +6,7 @@ public class Level : MonoBehaviour {
     private int _level = 0;
     private int _exp = 0;
     public int _upgradePoints = 0;
-    private int _expNextLevel;
+    private int _expNextLevel;                         
 
     // Start is called before the first frame update
     void Start() {
@@ -27,6 +27,7 @@ public class Level : MonoBehaviour {
 
     // Gain 1 level, 1 upgrade point, update the exp required for the next level
     public void GainLevel() {
+        Debug.Log("LEVEL UP!");
         _level++;
         _upgradePoints++;
         _expNextLevel = NextLevelExp(_level+1);

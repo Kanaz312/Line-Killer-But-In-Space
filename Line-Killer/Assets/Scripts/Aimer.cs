@@ -37,8 +37,12 @@ public class Aimer : MonoBehaviour
     {
         Vector3 normalizedCutDireciton = (Vector3)_cutDir;
         normalizedCutDireciton.z = 0;
-        _aimRenderer.SetPosition(0, transform.position);
-        _aimRenderer.SetPosition(1, transform.position + normalizedCutDireciton * _aimLength);
+        Vector3 posA = transform.position,
+            posB = transform.position + normalizedCutDireciton * _aimLength;
+        posA.z = -2;
+        posB.z = -2;
+        _aimRenderer.SetPosition(0, posA);
+        _aimRenderer.SetPosition(1, posB);
         _aimRenderer.startWidth = _aimWidth;
         _aimRenderer.endWidth = _aimWidth;
     }

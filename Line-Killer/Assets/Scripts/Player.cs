@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
 
     private Camera _cam = null;
     private LineHandler _lineHandler = null;
+    private EnemyHandler _enemyHandler = null;
+    private Shake _camShake = null;
     private Aimer _aimer = null;
     private Cutter _cutter = null;
     private SpriteRenderer _renderer = null;
@@ -34,6 +36,7 @@ public class Player : MonoBehaviour
         _cam = Camera.main;
         _lineHandler = FindObjectOfType<LineHandler>();
         _renderer = GetComponent<SpriteRenderer>();
+        _enemyHandler = FindObjectOfType<EnemyHandler>();
         _aimer = GetComponent<Aimer>();
         _cutter = GetComponent<Cutter>();
         _worldScaler = FindObjectOfType<WorldScaler>();
@@ -41,6 +44,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Cutter did not find a WorldScaler object");
         }
+        _camShake = FindObjectOfType<Shake>();
         StartCoroutine(ResetPosition());
         WorldScaler.OnScaleWorld += OnScaleWorld;
     }
@@ -147,6 +151,10 @@ public class Player : MonoBehaviour
             // Set position to new endpoint
             _lineIndex = _lineHandler.GetIndexOfPoint(cutEndPoint);
             _interpVal = _lineHandler.GetInterpValueOnLine(cutEndPoint, _lineIndex);
+
+            // Check if enemies outside 
+            _enemyHandler.KillOutOfBounds();
+            
             _worldScaler.ScaleWorld();
         }
     }
@@ -178,6 +186,13 @@ public class Player : MonoBehaviour
         _state = PlayerState.LineRiding;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision) {
+        //if (collision.gameObject.GetType() == typeof(Chiller)) {
+        _camShake.start = true;
+        GetComponent<Health>().Damage(1);
+        Debug.Log(GetComponent<Health>().Get());
+        //}
+    }
     public void OnScaleWorld(Vector2 point, float scale)
     {
         Vector3 position = transform.position;
