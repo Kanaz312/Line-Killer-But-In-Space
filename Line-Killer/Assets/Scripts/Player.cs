@@ -38,6 +38,12 @@ public class Player : MonoBehaviour
         _aimer = GetComponent<Aimer>();
         _cutter = GetComponent<Cutter>();
         StartCoroutine(ResetPosition());
+        WorldScaler.OnScaleWorld += OnScaleWorld;
+    }
+
+    private void OnDestroy()
+    {
+        WorldScaler.OnScaleWorld -= OnScaleWorld;
     }
 
     // Update is called once per frame
@@ -169,5 +175,10 @@ public class Player : MonoBehaviour
         _interpVal = 0.0f;
         _lineIndex = 0;
         _state = PlayerState.LineRiding;
+    }
+
+    public void OnScaleWorld(Vector2 point, float scale)
+    {
+        Debug.Log($"Player OnScaleWorld\nPoint Received: {point}\nFloat Received {scale}");
     }
 }
