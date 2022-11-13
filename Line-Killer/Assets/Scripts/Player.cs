@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     private Aimer _aimer = null;
     private Cutter _cutter = null;
     private SpriteRenderer _renderer = null;
+    private WorldScaler _worldScaler = null;
     private float _interpVal = 0.0f;
     private int _lineIndex = 0;
 
@@ -35,6 +36,11 @@ public class Player : MonoBehaviour
         _renderer = GetComponent<SpriteRenderer>();
         _aimer = GetComponent<Aimer>();
         _cutter = GetComponent<Cutter>();
+        _worldScaler = FindObjectOfType<WorldScaler>();
+        if (_worldScaler == null)
+        {
+            Debug.LogError("Cutter did not find a WorldScaler object");
+        }
         StartCoroutine(ResetPosition());
         WorldScaler.OnScaleWorld += OnScaleWorld;
     }
@@ -141,6 +147,7 @@ public class Player : MonoBehaviour
             // Set position to new endpoint
             _lineIndex = _lineHandler.GetIndexOfPoint(cutEndPoint);
             _interpVal = _lineHandler.GetInterpValueOnLine(cutEndPoint, _lineIndex);
+            _worldScaler.ScaleWorld();
         }
     }
 
@@ -173,6 +180,7 @@ public class Player : MonoBehaviour
 
     public void OnScaleWorld(Vector2 point, float scale)
     {
-        Debug.Log($"Player OnScaleWorld\nPoint Received: {point}\nFloat Received {scale}");
+        Vector3 position = transform.position;
+        transform.position = position * scale;
     }
 }

@@ -13,6 +13,7 @@ public class Cutter : MonoBehaviour
         {
             Debug.LogError("Cutter did not find a LineHandler object");
         }
+
     }
 
     public void CutSection(int startIndex, Vector3 startPoint, int endIndex, Vector3 endPoint)

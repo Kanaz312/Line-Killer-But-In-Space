@@ -18,6 +18,12 @@ public class LineHandler : MonoBehaviour
     {
         _lineRenderer = GetComponent<LineRenderer>();
         _cam = Camera.main;
+        WorldScaler.OnScaleWorld += OnScaleWorld;
+    }
+
+    private void OnDestroy()
+    {
+        WorldScaler.OnScaleWorld -= OnScaleWorld;
     }
 
     private void Update()
@@ -309,5 +315,13 @@ public class LineHandler : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void OnScaleWorld(Vector2 center, float scale)
+    {
+        for (int i = 0; i < _points.Count; i++)
+        {
+            _points[i] = _points[i] * scale;
+        }
     }
 }

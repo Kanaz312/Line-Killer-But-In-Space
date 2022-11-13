@@ -9,13 +9,14 @@ public class CameraHandler : MonoBehaviour {
     [SerializeField] float zVal = -10f; // The z position of the camera
     [SerializeField] private float padding = 1f;    // The padding around the polygon
     [SerializeField] private float zoomSpd = 0.1f;  // How fast it lerps
+    private float targetScale;
 
     // Start is called before the first frame update
     void Start()
     {
         _cam = gameObject.GetComponent<Camera>();
         _lineHandler = FindObjectOfType<LineHandler>();
-
+        targetScale = _cam.orthographicSize;
     }
 
     // Update is called once per frame
@@ -49,4 +50,8 @@ public class CameraHandler : MonoBehaviour {
         transform.position = Vector3.Lerp(transform.position, camPos, zoomSpd);
     }
 
+    public float GetWorldRescaleFactor()
+    {
+        return targetScale / _cam.orthographicSize;
+    }
 }
