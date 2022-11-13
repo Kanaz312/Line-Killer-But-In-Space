@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _width: 0.1
-  _color: {r: 0, g: 1, b: 0, a: 1}
+  _color: {r: 1, g: 1, b: 1, a: 1}
   _points:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 25, z: 0}

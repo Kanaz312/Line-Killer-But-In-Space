@@ -5,14 +5,17 @@ using UnityEngine;
 public class Cutter : MonoBehaviour
 {
     private LineHandler _lineHandler = null;
-
+    private MeshMaker _meshMaker;
     private void Start()
     {
         _lineHandler = FindObjectOfType<LineHandler>();
+
         if (_lineHandler == null)
         {
             Debug.LogError("Cutter did not find a LineHandler object");
         }
+
+        _meshMaker = FindObjectOfType<MeshMaker>();
     }
 
     public void CutSection(int startIndex, Vector3 startPoint, int endIndex, Vector3 endPoint)
@@ -53,5 +56,7 @@ public class Cutter : MonoBehaviour
             _lineHandler.RemoveIndices(_lineHandler.IncrementPointIndex(newIndexB)
                 , newIndexA);
         }
+
+        _meshMaker.MakePolygonMesh();
     }
 }
