@@ -19,9 +19,17 @@ public class LineHandler : MonoBehaviour
     {
         _lineRenderer = GetComponent<LineRenderer>();
         _cam = Camera.main;
+        
         _meshMaker = FindObjectOfType<MeshMaker>();
 
         _meshMaker.MakePolygonMesh();
+        
+        WorldScaler.OnScaleWorld += OnScaleWorld;
+    }
+
+    private void OnDestroy()
+    {
+        WorldScaler.OnScaleWorld -= OnScaleWorld;
     }
 
     private void Update()
@@ -315,6 +323,13 @@ public class LineHandler : MonoBehaviour
         return true;
     }
 
+    public void OnScaleWorld(Vector2 center, float scale)
+    {
+        for (int i = 0; i < _points.Count; i++)
+        {
+            _points[i] = _points[i] * scale;
+        }
+    }
     public List<Vector3> GetCopyOfPoints()
     {
         return new List<Vector3>(_points);

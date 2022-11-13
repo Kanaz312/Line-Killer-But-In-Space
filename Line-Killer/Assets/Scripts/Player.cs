@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     private Aimer _aimer = null;
     private Cutter _cutter = null;
     private SpriteRenderer _renderer = null;
+    private WorldScaler _worldScaler = null;
     private float _interpVal = 0.0f;
     private int _lineIndex = 0;
 
@@ -38,6 +39,11 @@ public class Player : MonoBehaviour
         _enemyHandler = FindObjectOfType<EnemyHandler>();
         _aimer = GetComponent<Aimer>();
         _cutter = GetComponent<Cutter>();
+        _worldScaler = FindObjectOfType<WorldScaler>();
+        if (_worldScaler == null)
+        {
+            Debug.LogError("Cutter did not find a WorldScaler object");
+        }
         _camShake = FindObjectOfType<Shake>();
         StartCoroutine(ResetPosition());
         WorldScaler.OnScaleWorld += OnScaleWorld;
@@ -148,7 +154,8 @@ public class Player : MonoBehaviour
 
             // Check if enemies outside 
             _enemyHandler.KillOutOfBounds();
-
+            
+            _worldScaler.ScaleWorld();
         }
     }
 
@@ -188,6 +195,7 @@ public class Player : MonoBehaviour
     }
     public void OnScaleWorld(Vector2 point, float scale)
     {
-        Debug.Log($"Player OnScaleWorld\nPoint Received: {point}\nFloat Received {scale}");
+        Vector3 position = transform.position;
+        transform.position = position * scale;
     }
 }
